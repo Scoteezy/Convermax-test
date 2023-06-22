@@ -1,0 +1,53 @@
+.schedule{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid gray;
+    padding: 30px;
+    &__types{
+        &-type{
+            &-each{
+                display: none;
+                justify-content: space-around;
+                margin-top: 10px;
+               input{
+                margin-left: 5px;
+                width: 65px;
+               }
+            }
+            &-weekly{
+                margin-top: 10px;
+                display: none;
+                flex-direction: column;
+                label{
+                    margin-top: 5px;
+                    input{
+                        margin-top: 10px;
+                        margin-left: 15px;
+                    }
+                }
+            }
+            &-daily{
+                display: none;
+                justify-content: space-around;
+                margin-top: 10px;
+                input{
+                    margin-left: 5px;
+                }
+            }
+            &-monthly{
+                margin-top: 10px;
+                display: none;
+                flex-direction: column;
+                label{
+                    margin-top: 5px;
+                }
+                label:last-child{
+                    margin-top: 15px;
+                }
+            }
+        }
+    }
+}
+.active{ 
+    display: flex;
+}
