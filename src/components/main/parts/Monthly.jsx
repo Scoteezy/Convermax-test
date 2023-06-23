@@ -22,7 +22,7 @@ const Monthly = ({styles,changeMonthDay,changeTime,changeDay}) => {
   return (
     <div className={`schedule__types-type-monthly ${styles.monthlyStyles}`}>
     <label >
-    On <input value={monthDay} onChange={changeMonthDay} min='1' max='31' type="number" />
+    On <input placeholder="day" value={monthDay} onChange={changeMonthDay} min='1' max='31' type="number" />
     </label>
     <label >
     And      <select multiple onChange={changeDay} value={days}>

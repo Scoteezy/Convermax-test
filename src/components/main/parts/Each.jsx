@@ -16,7 +16,7 @@ const Each = ({styles,changeExactTime}) => {
     <div className={`schedule__types-type-each ${styles.eachStyles}`}>
     <label>
           Each
-          <input value={value} required min='0' max='59' onChange={changeExactTime} type="number" />
+          <input value={value} placeholder="minute" required min='0' max='59' onChange={changeExactTime} type="number" />
         </label> 
   </div>
   )
