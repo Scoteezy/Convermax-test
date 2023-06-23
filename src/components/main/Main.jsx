@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import {addMinutes,addExactTime,addDay,addMonthDay,addHour,addType,clearAll} from '../../store/scheduleSlice'
 import useStyles from "../../hooks/useStyles";
 import "./main.scss";
