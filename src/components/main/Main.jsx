@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useDispatch,useSelector } from "react-redux";
 import {addMinutes,addExactTime,addDay,addMonthDay,addHour,addType,clearAll} from '../../store/scheduleSlice'
 import useStyles from "../../hooks/useStyles";
@@ -9,29 +9,25 @@ import Monthly from "./parts/Monthly";
 import Each from "./parts/Each";
 const Main = () => {
   const [type,setType] = useState('');
-  const [exactTimeInput,setExactTimeInput] = useState('');
+
   const styles = useStyles(type);
-  const info = useSelector((store)=>store.schedule.schedule)
   const dispatch = useDispatch();
   const changeSelect = (e)=>{
     if(e.target.value==='Choose type'){
      setType('');
-     setExactTimeInput('');
      dispatch(clearAll());
     }else{
       setType(e.target.value);
       dispatch(addType({type:e.target.value}))
       dispatch(clearAll());
-
     }
   }
-  const changeDay = (data)=>{
-    const day = data.map((el)=>el.value);
+  const changeDay = (e)=>{
+    const day = Array.from(e.target.options).filter((item) => item.selected).map((item) => item.value).join(",")
     dispatch(addDay({day}))
   }
   const changeExactTime = (e)=>{
     const exactTime = e.target.value;
-    setExactTimeInput(exactTime);
     dispatch(addExactTime({exactTime}));
   }
   const changeTime = (e)=>{
@@ -45,7 +41,11 @@ const Main = () => {
     const day = e.target.value;
     dispatch(addMonthDay({day}))
   }
-  console.log(info)
+  useEffect(()=>{
+return ()=>{
+
+}
+  },[type])
   return (
     <>
       <h1>Schedule</h1>
@@ -58,7 +58,7 @@ const Main = () => {
           <option value="Monthly">Monthly</option>
         </select>
         <div className="schedule__types">
-        <Each styles={styles} exactTimeInput={exactTimeInput} changeExactTime={changeExactTime}/>
+        <Each styles={styles} changeExactTime={changeExactTime}/>
         <Weekly changeDay={changeDay} styles={styles} changeTime={changeTime}/>
         <Daily changeTime={changeTime} styles={styles}/>
         <Monthly styles={styles} changeMonthDay={changeMonthDay} changeTime={changeTime} changeDay={changeDay}/>

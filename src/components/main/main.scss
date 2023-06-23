@@ -25,6 +25,10 @@
                         margin-left: 15px;
                     }
                 }
+                label:first-child{
+                    display: flex;
+                    flex-direction: column;
+                }
             }
             &-daily{
                 display: none;
@@ -40,6 +44,10 @@
                 flex-direction: column;
                 label{
                     margin-top: 5px;
+                }
+                 label:nth-child(2){
+                    display: flex;
+                    flex-direction: column;
                 }
                 label:last-child{
                     margin-top: 15px;

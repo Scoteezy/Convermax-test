@@ -1,11 +1,22 @@
 /* eslint-disable react/prop-types */
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
+const Each = ({styles,changeExactTime}) => {
+  const store = useSelector((store)=>store.schedule.schedule)
+  const [value,setValue] = useState('');
 
-const Each = ({styles,exactTimeInput,changeExactTime}) => {
+  useEffect(()=>{
+    setValue(store.exactTime);
+    return()=>{
+      setValue('')
+    }
+  },[store.exactTime])
   return (
+    
     <div className={`schedule__types-type-each ${styles.eachStyles}`}>
     <label>
           Each
-          <input value={exactTimeInput} required min='0' max='59' onChange={changeExactTime} type="number" />
+          <input value={value} required min='0' max='59' onChange={changeExactTime} type="number" />
         </label> 
   </div>
   )

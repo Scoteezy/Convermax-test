@@ -1,6 +1,9 @@
 import{useState, useEffect } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
-import {addMinutes,addExactTime,addDay,addMonthDay,addHour,addType} from '../../store/scheduleSlice'
+import {cronRegExp} from '../../data/index.js'
+import cronToDate from '../../data/fromCronConverter.js'
+import {addMinutes,addExactTime,addDay,addMonthDay,addHour,clearAll} from '../../store/scheduleSlice'
+import loadFunc from '../../data/loadFunc.js'
 import './footer.scss'
 import cronConverter from '../../data/cronConverter'
 const Footer = () => {
@@ -9,57 +12,31 @@ const Footer = () => {
   const [type,setType] = useState('');
   const dateObg = useSelector((store)=>store.schedule.schedule);
   const [message,setMessage] = useState('');
+  let cronObj = {};
   const handleSave= ()=>{
    const cron=  cronConverter(dateObg);
    setCronString(cron);
+   if(cron.match(cronRegExp)){
+    dispatch(clearAll());
+   }
   }
-  const handleLoad = (type)=>{
-    if((type== 'Weekly' || type=='Daily' || type=='Monthly' || type=='EachXMinutes') && type==dateObg.type){
-      if(cronString){
-       const arr = cronString.split(' ');
-       console.log(arr);
-       let minute;
-       let hour;
-       let monthDay;
-       let weekDay;
-       if(arr[0]==''){
-        minute=arr[1].split('/')[1];
-        setMessage(`Task will be executed each ${minute} minutes`);
-        return;
-       }
-       if(arr[0]!='*' && +arr[0]){
-        minute=arr[0];
-        hour=arr[1];
-       }
-       if(arr[2]!='*' && +arr[2]){
-        monthDay=arr[2];
-       }
-       if(arr[4]!='*' && arr[4]){
-        weekDay=arr[4];
-       }
-       if(!monthDay && weekDay){
-        setMessage(`Task will be executed at ${hour}:${minute} at each weekday ${weekDay}`);
-        return;
-       }
-       if(!weekDay){
-        setMessage(`Task will be executed at ${hour}:${minute} every day`);
-       }
-       if(monthDay){
-        setMessage(`Task will be executed at ${hour}:${minute} at each month day: ${monthDay} and each weekday ${weekDay}`);
-       }
-
-       if(!monthDay && !weekDay && !minute && !hour){
-        setMessage(`Something went wrong`)
-       }
-      }else{
-        setCronString('Input is empty')
-      }
-    }else{
-      setCronString("Type wasn't selected or differs from form type")
-    }
+  const handleLoad = ()=>{
+      if(cronString.match(cronRegExp)){
+        cronObj= cronToDate(cronString);
+        const timeObj = loadFunc(cronString,cronObj);
+        dispatch(clearAll());
+        dispatch(addMinutes({minutes: timeObj.minute}))
+        dispatch(addHour({hour:timeObj.hour}))
+        dispatch(addDay(({day:timeObj.day})))
+        dispatch(addExactTime({exactTime: timeObj.exactTime}))
+        dispatch(addMonthDay({day:timeObj.monthDay}))
+        setMessage(timeObj.message)
+      }else{setMessage('Error')}
 }
   useEffect(()=>{
     setType(dateObg.type);
+    setMessage('')
+    setCronString('');
   },[dateObg.type])
   return (
     <>
@@ -69,7 +46,7 @@ const Footer = () => {
         <button onClick={handleSave}>Save</button>
     </div>
     <div className='input-container'>
-    <input className='myinput' type="text" value={type} onChange={(e)=>setType(e.target.value)} />
+    <input className='myinput' disabled type="text" value={type} onChange={(e)=>setType(e.target.value)} />
     <input  value={cronString} onChange={(e)=>setCronString(e.target.value)} type="text" />
     </div>
    
